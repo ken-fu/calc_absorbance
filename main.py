@@ -2,6 +2,7 @@
 import os
 import sys
 
+import numpy as np
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel
 from PyQt5.QtWidgets import QLineEdit, QMessageBox, QFileDialog
 
@@ -35,9 +36,7 @@ class MainWidget(QWidget):
         self.resize(720, 250)
         self.move(100, 100)
         self.setWindowTitle('calc_absorbance')
-
         self.create_widgets()
-
         self.show()
 
     def create_widgets(self):
@@ -85,9 +84,8 @@ class MainWidget(QWidget):
                 self.message_box = QMessageBox.information(
                     self, "", "file open error", QMessageBox.Close)
                 return
-        self.result_x, self.result_y = calc_abs(file_path)
-
-        self.plot_canvas.plot(self.result_x, self.result_y)
+        self.result_list = calc_abs(file_path)
+        self.plot_canvas.plot(self.result_list)
 
     def save_fig(self):
         from pathlib import Path
@@ -99,10 +97,7 @@ class MainWidget(QWidget):
 
         output_csv = open(str(Path(file_name).with_suffix(".csv")), 'w')
         try:
-            for i, _ in enumerate(self.result_x):
-                output_csv.write(
-                    str(self.result_x[i])+','+str(self.result_y[i])+'\n')
-            output_csv.close()
+            np.savetxt(str(Path(file_name).with_suffix(".csv")), self.result_list, delimiter=",")
         except:
             self.message_box = QMessageBox.information(
                 self, "", "file save error", QMessageBox.Close)

@@ -28,9 +28,9 @@ class PlotCanvas(FigureCanvas):
         self.axes.set_xlabel('Wavelength [nm]')
         self.axes.set_ylabel('Absorption [arb.units]')
 
-    def plot(self, data_x, data_y):
+    def plot(self, data_xy):
         '''plot data'''
         self.axes.clear()
         self.fig_init()
-        self.axes.plot(data_x, data_y, 'b-')
+        self.axes.plot(data_xy[:, 0], data_xy[:, 1], 'b-')
         self.draw()
